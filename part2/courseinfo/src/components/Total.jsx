@@ -1,7 +1,8 @@
 const Total = (props) => {
-  const {parts} = props.course
+  const {exercises} = props
+  //console.log("Totalcomponent:", exercises)
 
-  return <p>Total exercises: {parts.reduce((sum, excount) => sum + excount.exercises, 0)}</p> 
+  return <p><strong>Total of {exercises.reduce((sum, excount) => sum + excount, 0)} exercises</strong></p> 
 }
 
 export default Total;
