@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+
 
 const App = () => {
   const initialPersons = [
-    { name: 'Arto Hellas', number: '040-123456', address: 'Won', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', address: 'Wonton', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', address: 'Wonten', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', address: 'Won11', id: 4 }
+    { name: 'Arto Hellas', number: '040-123456',  id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523',  id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345',  id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
+    { name: 'Jan Harold', number: '63 916 875 7277', id: 5 }
   ];
   const [persons, setPersons] = useState(initialPersons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newAddress, setNewAddress] = useState('')
   const [filter, setFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(initialPersons)
 
@@ -39,14 +43,12 @@ const App = () => {
       const contact = {
         name: newName,
         number: newNumber,
-        address: newAddress,
         id: newId
       }
       setPersons(persons.concat(contact))
       setFilteredPersons(persons.concat(contact))
       setNewName('')
       setNewNumber('')
-      setNewAddress('')
     }     
   }
 
@@ -59,31 +61,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={filter} onChange={handleFilterChange}/>
-      </div>
+      <Filter value={filter} onChange={handleFilterChange}/>
+      
       <h2>add a new</h2>
-      <form>
-        <div>
-          name: <input value={newName} onChange={event => setNewName(event.target.value)} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={event => setNewNumber(event.target.value)} />
-        </div>
-        <div>
-          address: <input value={newAddress} onChange={event => setNewAddress(event.target.value)}/>
-        </div>
-        <div>
-          <button type="submit" onClick={addContact}>add</button>
-        </div>
-      </form>
+      <PersonForm 
+        addContact={addContact} 
+        newName={newName} 
+        newNumber={newNumber} 
+        setNewName={setNewName} 
+        setNewNumber={setNewNumber}
+      />
+      
       <h2>Contacts</h2>
-      
-      
-      <ul>
-        {filteredPersons.map(person => <li key={person.id}>{person.name} - {person.number} - {person.address}</li>)}
-      </ul>
-      
+      <Persons persons={filteredPersons} />
     </div>
   )
 }
