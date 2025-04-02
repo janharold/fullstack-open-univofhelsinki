@@ -1,7 +1,8 @@
+
 import Person from './Person'
 
 const Persons = (props) => {
-  //console.log(props)
+  //console.log("This is", props)
   const { persons } = props
   
   return(

@@ -1,40 +1,50 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
 
 const App = () => {
-  const initialPersons = [
-    { name: 'Arto Hellas', number: '040-123456',  id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523',  id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345',  id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
-    { name: 'Jan Harold', number: '63 916 875 7277', id: 5 }
-  ];
-  const [persons, setPersons] = useState(initialPersons)
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [filteredPersons, setFilteredPersons] = useState(initialPersons)
+  const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [isLoading, setIsLoading] = useState(true)
+
 
   useEffect(() => {
-    const myFilteredContacts = initialPersons.filter(person =>
-      person.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    setFilteredPersons(myFilteredContacts);
-    
-    console.log(myFilteredContacts.length)
-    
-    if(myFilteredContacts.length === 0) {
-      alert('No contacts found')
-    }
+    console.log('axios effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+        setFilteredPersons(response.data)
+        setIsLoading(false)
+      })
+  }, [])
 
-  }, [filter]);
+  useEffect(() => {
+
+    if(!isLoading) {
+      const myFilteredContacts = persons.filter(person =>
+        person.name.toLowerCase().includes(filter.toLowerCase())
+      );
+      setFilteredPersons(myFilteredContacts)
+      
+      //console.log(myFilteredContacts)
+      
+      if(myFilteredContacts.length === 0) {
+        alert('No contacts found')
+      }
+    }
+  }, [filter, persons, isLoading]);
 
   const addContact = (event) => {
     event.preventDefault()
-
+    
     if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
       return
@@ -55,6 +65,7 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value)
+    //console.log(event.target.value) 
   };
   
 
